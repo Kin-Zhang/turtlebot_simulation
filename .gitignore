@@ -61,3 +61,4 @@ build-*/
 
 #build file
 devel/
+src/CMakeLists.txt
