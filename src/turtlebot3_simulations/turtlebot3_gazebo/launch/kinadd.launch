@@ -1,0 +1,6 @@
+<launch>
+    <include file="$(find turtlebot3_gazebo)/launch/turtlebot3_house.launch" />
+    
+    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find turtlebot3_gazebo)/rviz/turtlebot3_gazebo_model.rviz" />
+    <node pkg="tf" type="static_transform_publisher" name="base2laser" args="-0.064 0 0.122 0 0 0 base_footprint base_scan 100" />
+</launch>

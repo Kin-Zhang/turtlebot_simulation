@@ -95,8 +95,15 @@ roslaunch turtlebot3_gazebo turtlebot3_house.launch
 roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 ```
 
+![](img/ex1.png)
+
+实际我看看搞个视频是否ok
+
+![](img/ex2.png)
+
 ### 自动slam建图
 
 
 
 ### 建图后自主导航
+
