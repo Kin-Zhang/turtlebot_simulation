@@ -62,3 +62,5 @@ build-*/
 #build file
 devel/
 src/CMakeLists.txt
+
+.catkin_workspace
