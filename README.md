@@ -25,13 +25,6 @@ git clone https://github.com/ros/geometry2.git
 
 ## 1. git clone
 
-首先自己建立自己的workspace，通常catkin_ws，或者叫什么xxx_ws均可，最好单独一个workspace
-
-```bash
-mkdir ~/catkin_ws/src
-cd ~/catkin_ws/src
-```
-
 gitee clone 中国大陆使用：
 
 ```bash
@@ -44,13 +37,18 @@ github clone：
 git clone https://github.com/Kin-Zhang/turtlebot_simulation.git
 ```
 
+==修改一下文件夹名字 tursim_ws==，进入文件夹
+
+```bash
+cd tursim_ws
+```
+
 ## 2. 编译
 
 首先全新系统的话可能需要安装一下一个系统依赖：
 
 ```bash
-sudo apt-get install libsdl-image1.2-dev
-sudo apt-get install libsdl-dev
+sudo apt-get install libsdl-image1.2-dev libsdl-dev libsuitesparse-dev
 ```
 
 然后编译：
@@ -72,7 +70,7 @@ source ~/.bashrc
 zsh用户：
 
 ```bash
-echo "source ~/catkin_ws/devel/setup.zsh" >> ~/.zshrc
+echo "source ~/tursim_ws/devel/setup.zsh" >> ~/.zshrc
 echo "export TURTLEBOT3_MODEL=waffle" >> ~/.zshrc
 source ~/.zshrc
 ```
@@ -95,15 +93,68 @@ roslaunch turtlebot3_gazebo turtlebot3_house.launch
 roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 ```
 
+这一步需要给那个文件权限chmod +x
+
+```bash
+sudo chmod +x ~/tursim_ws/src/turtlebot3/turtlebot3_teleop/nodes/turtlebot3_teleop_key
+```
+
 ![](img/ex1.png)
 
 实际我看看搞个视频是否ok
 
 ![](img/ex2.png)
 
-### 自动slam建图
+### slam建图
 
+#### auto run
 
+待写
+
+#### 手动控制
+
+手动的意思呢 就是需要自己控制车辆开，大致效果如下图，需要运行的command
+
+1. 需要开启一下gazebo和fake_node，就是假装一下有个车 和有 tf树
+
+    ```bash
+    roslaunch turtlebot3_gazebo kinadd.launch
+    ```
+
+2. 建图launch 本分支使用的是karto，也可gmapping 需要自行clone代码进行
+
+   ```bash
+   roslaunch turtlebot3_slam turtlebot3_karto.launch
+   ```
+
+![](img/ex3.png)
+
+在建立完成后，需要进行保存操作，保存后需要自己移到navigation下，注意查看yaml文件中第一行路径是否ok
+
+```bash
+rosrun map_server map_saver map:=/map -f map_x
+```
+
+- [ ] TODO写到launch 按键保存
 
 ### 建图后自主导航
 
+1. 需要开启一下gazebo和fake_node，就是假装一下有个车 和有 tf树
+
+   ```bash
+   roslaunch turtlebot3_gazebo kinadd.launch
+   ```
+
+2. 注意修改map files从哪里获取的
+
+   ```bash
+   roslaunch turtlebot3_navigation turtlebot3_navigation.launch
+   ```
+
+   也就是launch中的这一行
+
+   ```bash
+   <arg name="map_file" default="$(find turtlebot3_navigation)/maps/map_test.yaml"/>
+   ```
+
+![](img/ex5.png)
