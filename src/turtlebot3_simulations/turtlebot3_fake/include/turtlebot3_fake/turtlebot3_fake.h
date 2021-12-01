@@ -77,10 +77,11 @@ class Turtlebot3Fake
 
   // ROS Topic Publishers
   ros::Publisher joint_states_pub_;
-  ros::Publisher odom_pub_;
+  
 
   // ROS Topic Subscribers
   ros::Subscriber cmd_vel_sub_;
+  ros::Subscriber odom_sub_;
 
   sensor_msgs::JointState joint_states_;
   nav_msgs::Odometry odom_;
@@ -106,6 +107,7 @@ class Turtlebot3Fake
 
   // Function prototypes
   void commandVelocityCallback(const geometry_msgs::TwistConstPtr cmd_vel_msg);
+  void commandOdomCallback(const nav_msgs::Odometry::ConstPtr &msg);
   bool updateOdometry(ros::Duration diff_time);
   void updateJoint(void);
   void updateTF(geometry_msgs::TransformStamped& odom_tf);

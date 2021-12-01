@@ -94,8 +94,8 @@ bool Turtlebot3Fake::init()
 
   // initialize publishers
   joint_states_pub_ = nh_.advertise<sensor_msgs::JointState>("joint_states", 100);
-  odom_pub_         = nh_.advertise<nav_msgs::Odometry>("odom", 100);
-
+  // odom_pub_         = nh_.advertise<nav_msgs::Odometry>("odom", 100);
+  odom_sub_         = nh_.subscribe("odom", 100,  &Turtlebot3Fake::commandOdomCallback, this);
   // initialize subscribers
   cmd_vel_sub_  = nh_.subscribe("cmd_vel", 100,  &Turtlebot3Fake::commandVelocityCallback, this);
 
@@ -118,6 +118,10 @@ void Turtlebot3Fake::commandVelocityCallback(const geometry_msgs::TwistConstPtr 
   wheel_speed_cmd_[RIGHT] = goal_linear_velocity_ + (goal_angular_velocity_ * wheel_seperation_ / 2);
 }
 
+void Turtlebot3Fake::commandOdomCallback(const nav_msgs::Odometry::ConstPtr &msg)
+{
+  odom_ = *msg;
+}
 /*******************************************************************************
 * Calculate the odometry
 *******************************************************************************/
@@ -219,20 +223,19 @@ bool Turtlebot3Fake::update()
     wheel_speed_cmd_[RIGHT] = 0.0;
   }
 
-  // odom
-  updateOdometry(step_time);
-  odom_.header.stamp = time_now;
-  odom_pub_.publish(odom_);
-
   // joint_states
   updateJoint();
   joint_states_.header.stamp = time_now;
   joint_states_pub_.publish(joint_states_);
 
   // tf
-  geometry_msgs::TransformStamped odom_tf;
-  updateTF(odom_tf);
-  tf_broadcaster_.sendTransform(odom_tf);
+  if(odom_.pose.pose.orientation.w != 0)
+  {
+    geometry_msgs::TransformStamped odom_tf;
+    updateTF(odom_tf);
+    tf_broadcaster_.sendTransform(odom_tf);
+  }
+
 
   return true;
 }
